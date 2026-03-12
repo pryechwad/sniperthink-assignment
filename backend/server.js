@@ -2,13 +2,26 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
 
 // Store interests in memory (in production, use a database)
 const interests = [];
+
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'SniperThink API is running',
+    endpoints: {
+      health: 'GET /',
+      submitInterest: 'POST /api/interest',
+      getInterests: 'GET /api/interests'
+    }
+  });
+});
 
 app.post('/api/interest', (req, res) => {
   const { name, email, selectedStep } = req.body;
